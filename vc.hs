@@ -6,6 +6,7 @@ import Data.List (splitAt)
 import Data.Word (Word16, Word8)
 
 import System.Environment (getArgs)
+import System.Exit (exitFailure)
 import System.IO (hPutStrLn, stderr)
 
 compute :: [Word8] -> Word16
@@ -21,5 +22,5 @@ vcHyphen :: String -> String
 vcHyphen = (\(a, b) -> a ++ "-" ++ b) . splitAt 2 . vc
 
 main = do args <- getArgs
-          if length args /= 1 then hPutStrLn stderr "Usage:\n\tvc <GTIN + lot code>"
+          if length args /= 1 then hPutStrLn stderr "Usage:\n\tvc <GTIN + lot code>" >> exitFailure
                               else putStrLn $ vcHyphen (head args)
