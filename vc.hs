@@ -6,6 +6,7 @@ import Data.List (splitAt)
 import Data.Word (Word16, Word8)
 
 import System.Environment (getArgs)
+import System.IO (hPutStrLn, stderr)
 
 compute :: [Word8] -> Word16
 compute bs = execState (mapM_ (\b -> get >>= \crc -> put (snd $ iterate crcIter (b, crc) !! 8)) bs) 0
@@ -19,4 +20,6 @@ vc s = show $ (fromIntegral . compute) (map (fromIntegral . ord) s) `mod` 10000
 vcHyphen :: String -> String
 vcHyphen = (\(a, b) -> a ++ "-" ++ b) . splitAt 2 . vc
 
-main = getArgs >>= \(a:_) -> putStrLn (vcHyphen a)
+main = do args <- getArgs
+          if length args /= 1 then hPutStrLn stderr "Usage: vc <barcode string>"
+                              else putStrLn $ vcHyphen (head args)
